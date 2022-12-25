@@ -9,7 +9,6 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-        @click="slideLeft"
       >
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
       </svg>
@@ -31,7 +30,6 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-        @click="slideRight"
       >
         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
       </svg>
@@ -44,14 +42,6 @@ import Modal from '../modal/Modal.vue'
 export default {
   components: {
     'modal-component': Modal
-  },
-  methods: {
-    slideLeft() {
-      this.$refs.slider.scrollLeft = this.$refs.slider.scrollLeft - 900
-    },
-    slideRight() {
-      this.$refs.slider.scrollLeft = this.$refs.slider.scrollLeft + 900
-    }
   }
 }
 </script>

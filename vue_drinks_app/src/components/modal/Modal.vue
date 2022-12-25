@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- The button to open modal -->
-    <!-- The button to open modal -->
     <label for="my-modal-6" class="btn mb-3">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +25,7 @@
             <label class="label">
               <span class="label-text">카테고리</span>
             </label>
-            <select class="select select-bordered">
+            <select v-model="category" class="select select-bordered" required>
               <option disabled selected>카테고리를 선택해주세요</option>
               <option>Coffee</option>
               <option>Non-Coffee</option>
@@ -38,22 +36,40 @@
             <label class="label">
               <span class="label-text">음료명</span>
             </label>
-            <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+            <input
+              v-model="name"
+              type="text"
+              placeholder="Type here"
+              class="input input-bordered w-full max-w-xs"
+              required
+            />
           </div>
           <div class="form-control w-full max-w-xs text-sm">
             <label class="label">
               <span class="label-text">매장명</span>
             </label>
-            <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+            <input
+              v-model="store"
+              type="text"
+              placeholder="Type here"
+              class="input input-bordered w-full max-w-xs"
+              required
+            />
           </div>
           <div class="form-control w-full max-w-xs text-sm">
             <label class="label">
               <span class="label-text">키워드</span>
             </label>
-            <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+            <input
+              v-model="keyword"
+              type="text"
+              placeholder="Type here"
+              class="input input-bordered w-full max-w-xs"
+              required
+            />
           </div>
           <div class="form-control text-sm mt-6">
-            <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+            <input type="file" class="file-input file-input-bordered w-full max-w-xs" required @change="img" />
           </div>
         </div>
         <div class="btn-group flex-row gap-3 float-right">
@@ -61,7 +77,7 @@
             <label for="my-modal-6" class="btn">취소</label>
           </div>
           <div class="modal-action">
-            <label for="my-modal-6" class="btn">등록</label>
+            <label for="my-modal-6" class="btn" @click="handleSubmit">등록</label>
           </div>
         </div>
       </div>
@@ -70,7 +86,42 @@
 </template>
 
 <script>
-export default {}
+import { mapActions, mapGetters } from 'vuex'
+export default {
+  data() {
+    return {
+      category: null,
+      name: null,
+      store: null,
+      keyword: null
+    }
+  },
+  computed: {
+    ...mapGetters('Drink', { drink: 'Drink' })
+  },
+  methods: {
+    ...mapActions('Drink', ['actDrinkInsert']),
+    handleSubmit() {
+      let drinkData = {
+        category: this.category,
+        name: this.name,
+        store: this.store,
+        keyword: this.keyword
+      }
+      this.actDrinkInsert(drinkData)
+      console.log(drinkData)
+      this.initForm()
+      alert(`등록되었습니다!`)
+      this.$router.go()
+    },
+    initForm() {
+      this.category = ''
+      this.name = ''
+      this.store = ''
+      this.keyword = ''
+    }
+  }
+}
 </script>
 
 <style></style>

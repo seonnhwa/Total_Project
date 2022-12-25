@@ -6,10 +6,10 @@
         <coffee-section class="mt-32" />
       </div>
       <div class="snap-start bg-sky-100 h-screen flex items-center justify-center text-8xl">
-        <!-- <carousel-coffee /> -->
+        <noncoffee-section />
       </div>
       <div class="snap-start bg-violet-50 h-screen flex items-center justify-center text-8xl">
-        <!-- <carousel-coffee /> -->
+        <tea-section />
       </div>
     </div>
   </div>
@@ -18,13 +18,15 @@
 <script>
 import Header from '../components/layout/Header'
 import CoffeeSection from '../components/sliders/CoffeeSection'
-// import Modal from '../components/modal/Modal'
+import NoncoffeeSection from '../components/sliders/NoncoffeeSection'
+import TeaSection from '../components/sliders/TeaSection'
 
 export default {
   components: {
     'app-header': Header,
-    'coffee-section': CoffeeSection
-    // 'modal-component': Modal
+    'coffee-section': CoffeeSection,
+    'noncoffee-section': NoncoffeeSection,
+    'tea-section': TeaSection
   }
 }
 </script>
