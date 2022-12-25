@@ -1,26 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { SectionsContainer, Section } from 'react-fullpage';
+import Header from './components/Header';
+import Carousel from './components/Carousel';
+import Modal from './components/Modal';
+import ModalBody from './components/ModalBody';
 
-function App() {
+const App = () => {
+  let options = {
+    anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1 className='text-3xl font-bold underline'>React</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <ModalBody />
+      <SectionsContainer {...options}>
+        <Section className="section1">
+          <Modal />
+          <Carousel />
+        </Section>
+        <Section className="section2">
+          <Modal />
+          <Carousel />
+        </Section>
+        <Section className="section3">
+          <Modal />
+          <Carousel />
+        </Section>
+      </SectionsContainer>
     </div>
   );
-}
+};
 
 export default App;
