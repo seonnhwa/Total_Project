@@ -8,9 +8,9 @@
           </svg>
         </label>
         <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-          <li><a>Homepage</a></li>
-          <li><a>Portfolio</a></li>
-          <li><a>About</a></li>
+          <li><a>Coffee</a></li>
+          <li><a>Non-Coffee</a></li>
+          <li><a>Tea</a></li>
         </ul>
       </div>
     </div>
