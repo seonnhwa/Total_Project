@@ -14,12 +14,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
       </svg>
       <div class="card card-side bg-base-100 shadow-xl mr-8 w-[900px]">
-        <figure><img src="https://placeimg.com/200/280/arch" alt="Movie" /></figure>
-        <div class="card-body">
-          <h2 class="card-title mb-3">카테고리</h2>
-          <p class="text-sm">음료명:</p>
-          <p class="text-sm">매장명:</p>
-          <p class="text-sm">키워드: <kbd class="kbd">#</kbd></p>
+        <div v-for="(item, index) in DrinkList" :key="index" class="coffeeSection">
+          <figure><img src="https://placeimg.com/200/280/arch" alt="Movie" /></figure>
+          <div class="card-body">
+            <h2 class="card-title mb-3">카테고리</h2>
+            <p class="text-sm">음료명:</p>
+            <p class="text-sm">매장명:</p>
+            <p class="text-sm">키워드: <kbd class="kbd">#</kbd></p>
+          </div>
         </div>
       </div>
 
@@ -40,11 +42,23 @@
 
 <script>
 import Modal from '../modal/Modal.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     'modal-component': Modal
   },
+  computed: {
+    DrinkInsertedResult: state => state.InsertedResult,
+    ...mapGetters('Drink', { drink: 'Drink', drinkList: 'DrinkList', drinkResult: 'DrinkInsertedResult' }),
+    DrinkList() {
+      return this.drink
+    },
+    insertedResult() {
+      return this.drinkResult
+    }
+  },
   methods: {
+    ...mapActions('Drink', ['actDrinkList']),
     slideLeft() {
       this.$refs.cardSlide.scrollLeft = this.$refs.cardSlide.scrollLeft - 900
     },
