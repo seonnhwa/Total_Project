@@ -69,7 +69,7 @@
             />
           </div>
           <div class="form-control text-sm mt-6">
-            <input type="file" class="file-input file-input-bordered w-full max-w-xs" required @change="img" />
+            <input type="file" class="file-input file-input-bordered w-full max-w-xs" required />
           </div>
         </div>
         <div class="btn-group flex-row gap-3 float-right">

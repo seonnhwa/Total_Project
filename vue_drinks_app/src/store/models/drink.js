@@ -12,6 +12,7 @@ const stateInit = {
 }
 
 export default {
+  namespaced: true,
   state: {
     DrinkList: [],
     Drink: { ...stateInit.Drink },
@@ -46,7 +47,7 @@ export default {
     actDrinkList(context, payload) {
       /* RestAPI 호출 */
       api
-        .get('/serverApi/drink', { params: payload })
+        .get(`/serverApi/drinks`, { params: payload })
         .then(response => {
           const userList = response && response.data && response.data.rows
           context.commit('setDrinkList', userList)
@@ -63,7 +64,7 @@ export default {
       context.commit('setInsertedResult', null)
       /* RestAPI 호출 */
       api
-        .post('/serverApi/drink', payload)
+        .post(`/serverApi/drinks`, payload)
         .then(response => {
           const insertedResult = response && response.data && response.data.id
           context.commit('setInsertedResult', insertedResult)
@@ -86,7 +87,7 @@ export default {
 
       /* RestAPI 호출 */
       api
-        .get(`/serverApi/drink/${payload}`)
+        .get(`/serverApi/drinks/${payload}`)
         .then(response => {
           console.log('response : ', response)
           const drink = response && response.data
