@@ -20,12 +20,12 @@
     <div class="modal modal-bottom sm:modal-middle max-h-full">
       <div class="modal-box max-h-[600px]">
         <h3 class="font-bold text-lg">음료를 등록해주세요!</h3>
-        <div class="input-box flex-col items-center justify-between">
+        <div ref="form" class="input-box flex-col items-center justify-between">
           <div class="form-control w-full max-w-xs mt-6">
             <label class="label">
               <span class="label-text">카테고리</span>
             </label>
-            <select v-model="category" class="select select-bordered" required>
+            <select v-model="category" :state="categoryState" class="select select-bordered" required>
               <option disabled selected>카테고리를 선택해주세요</option>
               <option>Coffee</option>
               <option>Non-Coffee</option>
@@ -38,6 +38,7 @@
             </label>
             <input
               v-model="name"
+              :state="nameState"
               type="text"
               placeholder="Type here"
               class="input input-bordered w-full max-w-xs"
@@ -50,6 +51,7 @@
             </label>
             <input
               v-model="store"
+              :state="storeState"
               type="text"
               placeholder="Type here"
               class="input input-bordered w-full max-w-xs"
@@ -62,6 +64,7 @@
             </label>
             <input
               v-model="keyword"
+              :state="keywordState"
               type="text"
               placeholder="Type here"
               class="input input-bordered w-full max-w-xs"
@@ -91,16 +94,31 @@ export default {
   data() {
     return {
       category: null,
+      categoryState: null,
       name: null,
+      nameState: null,
       store: null,
-      keyword: null
+      storeState: null,
+      keyword: null,
+      keywordState: null
     }
   },
   computed: {
-    ...mapGetters('Drink', { drink: 'Drink' })
+    ...mapGetters('Drink', { drink: 'Drink' }),
+    drinksList() {
+      return this.drink
+    }
   },
   methods: {
     ...mapActions('Drink', ['actDrinkInsert']),
+    checkFormValidity() {
+      const valid = this.$refs.form.checkValidity()
+      this.categoryState = valid
+      this.nameState = valid
+      this.storeState = valid
+      this.keywordState = valid
+      return valid
+    },
     handleSubmit() {
       let drinkData = {
         category: this.category,
@@ -111,8 +129,8 @@ export default {
       this.actDrinkInsert(drinkData)
       console.log(drinkData)
       this.initForm()
-      alert(`등록되었습니다!`)
-      this.$router.go()
+      // alert(`등록되었습니다!`)
+      // this.$router.go()
     },
     initForm() {
       this.category = ''

@@ -49,8 +49,8 @@ export default {
       api
         .get(`/serverApi/drinks`, { params: payload })
         .then(response => {
-          const userList = response && response.data && response.data.rows
-          context.commit('setDrinkList', userList)
+          const drinkList = response && response.data && response.data.rows
+          context.commit('setDrinkList', drinkList)
         })
         .catch(error => {
           // 에러인 경우 처리
