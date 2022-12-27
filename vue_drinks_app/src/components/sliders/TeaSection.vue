@@ -4,8 +4,8 @@
     <div class="flex items-center justify-center">
       <div v-for="item in list" :key="item.id" class="carousel carousel-end rounded-box">
         <div class="carousel-item w-[700px]">
-          <img :src="getImg" alt="Drink" multiple />
-          <div class="card-body">
+          <img class="w-[300px] h-[300px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
+          <div class="card-body bg-base-100">
             <h2 class="card-title mb-3">Tea</h2>
             <p class="text-sm">음료명: {{ item.name }}</p>
             <p class="text-sm">매장명: {{ item.store }}</p>

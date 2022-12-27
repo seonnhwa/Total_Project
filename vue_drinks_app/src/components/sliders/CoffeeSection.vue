@@ -15,7 +15,13 @@
       </svg>
       <div v-for="item in list" :key="item.id" class="card card-side bg-base-100 shadow-xl mr-8 w-[900px]">
         <div class="coffeeSection">
-          <figure><img class="img-fluid" :src="getImg" alt="drinkImg" /></figure>
+          <figure>
+            <img
+              class="img-fluid w-[300px] h-[300px]"
+              :src="`http://192.168.0.62:3001/uploads/${item.img}`"
+              alt="drinkImg"
+            />
+          </figure>
           <div class="card-body">
             <h2 class="card-title mb-3">{{ item.category }}</h2>
             <p class="text-sm">음료명: {{ item.name }}</p>

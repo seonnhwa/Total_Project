@@ -14,7 +14,11 @@
         <div v-for="(item, index) in list" :key="item.id" :index="index">
           <div class="card lg:card-side bg-base-100 shadow-xl w-[700px]">
             <figure>
-              <img class="img-fluid" :src="getImg" alt="drinkImg" />
+              <img
+                class="img-fluid w-[300px] h-[300px]"
+                :src="`http://192.168.0.62:3001/uploads/${item.img}`"
+                alt="drinkImg"
+              />
             </figure>
             <div class="card-body">
               <!-- {{ list }} -->
