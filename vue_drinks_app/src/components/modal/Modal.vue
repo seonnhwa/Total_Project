@@ -27,9 +27,9 @@
             </label>
             <select v-model="category" :state="categoryState" class="select select-bordered" required>
               <option disabled selected>카테고리를 선택해주세요</option>
-              <option>커피</option>
-              <option>논커피</option>
-              <option>티</option>
+              <option>Coffee</option>
+              <option>Non-Coffee</option>
+              <option>Tea</option>
             </select>
           </div>
           <div class="form-control w-full max-w-xs text-sm">
@@ -143,7 +143,7 @@ export default {
       let input = event.target
       if (input.files && input.files[0]) {
         this.drink.img = input.files[0]
-        this.actImgUpdate(this.drink)
+        // this.actImgUpdate(this.drink)
         console.log(this.img)
       }
     },

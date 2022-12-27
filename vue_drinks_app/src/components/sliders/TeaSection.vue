@@ -1,47 +1,99 @@
 <template>
-  <div class="w-6/12">
+  <div class="w-full">
     <modal-component class="grid justify-items-end" />
     <div class="flex items-center justify-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-      </svg>
-
-      <div ref="slider" class="card lg:card-side bg-base-100 shadow-xl w-[900px]">
-        <figure><img src="https://placeimg.com/400/400/arch" alt="Album" /></figure>
-        <div class="card-body">
-          <h2 class="card-title mb-3">카테고리</h2>
-          <p class="text-sm">음료명:</p>
-          <p class="text-sm">매장명:</p>
-          <p class="text-sm">키워드: <kbd class="kbd">#</kbd></p>
+      <div v-for="item in list" :key="item.id" class="carousel carousel-end rounded-box">
+        <div class="carousel-item w-[700px]">
+          <img :src="getImg" alt="Drink" multiple />
+          <div class="card-body">
+            <h2 class="card-title mb-3">Tea</h2>
+            <p class="text-sm">음료명: {{ item.name }}</p>
+            <p class="text-sm">매장명: {{ item.store }}</p>
+            <p class="text-sm">
+              키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+            </p>
+          </div>
         </div>
       </div>
+      <!-- <div v-for="item in list" :key="item.id" class="carousel w-full">
+        <div id="slide1" class="carousel-item w-[700px]">
+          <img :src="getImg" class="w-[300px]" />
+          <div class="card-body">
+            <h2 class="card-title mb-3">Tea</h2>
+            <p class="text-sm">음료명: {{ item.name }}</p>
+            <p class="text-sm">매장명: {{ item.store }}</p>
+            <p class="text-sm">
+              키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+            </p>
+          </div>
+          <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+            <a href="#slide4" class="btn btn-circle">❮</a>
+            <a href="#slide2" class="btn btn-circle">❯</a>
+          </div>
+        </div>
+      </div> -->
 
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-      </svg>
+      <!-- <div class="carousel">
+        <div class="card lg:card-side bg-base-100 shadow-xl w-[1800px]">
+          <figure><img class="img-fluid" :src="getImg" alt="drinkImg" /></figure>
+          <div class="card-body">
+            <h2 class="card-title mb-3">Tea</h2>
+            <p class="text-sm">음료명: {{ item.name }}</p>
+            <p class="text-sm">매장명: {{ item.store }}</p>
+            <p class="text-sm">
+              키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+            </p>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import Modal from '../modal/Modal.vue'
+// import carousel from 'vue-owl-carousel'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     'modal-component': Modal
+  },
+  data() {
+    return {
+      list: []
+    }
+  },
+  computed: {
+    ...mapGetters('Drink', { drink: 'Drink', DrinkList: 'DrinkList' }),
+    // infoData() {
+    //   return this.drink
+    // },
+    drinkList() {
+      return this.drink
+    },
+    getImg() {
+      return `${process.env.VUE_APP_SERVER}/uploads/${this.list.img}`
+    }
+  },
+  created() {
+    // this.drink = { ...this.drinkList },
+    this.$axios
+      .get(`/serverApi/drinks/Tea`)
+      .then(res => {
+        this.list = res.data.rows
+        console.log('success', res)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    // this.actDrinkList()
+  },
+  methods: {
+    ...mapActions('Drink', ['actDrinkInit', 'actDrinkList']),
+    getDrinks(val) {
+      console.log('val : ', val)
+      this.actDrinkList(val)
+    }
   }
 }
 </script>
