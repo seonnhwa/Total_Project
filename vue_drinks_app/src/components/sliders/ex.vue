@@ -1,15 +1,11 @@
 <template>
-  <div class="w-[700px]">
-    <modal-component class="grid justify-items-end" />
+  <div class="w-full">
+    <modal-component class="grid justify-items-center" />
+    <!-- Implement the carousel -->
     <div class="relative mx-auto flex flex-row">
       <div v-for="item in list" :key="item.id" ref="slide" :index="'slideIndex=1'" class="slide relative flex flex-row">
-        <img
-          class="w-[400px] h-[400px] bg-base-100"
-          :src="`http://192.168.0.62:3001/uploads/${item.img}`"
-          alt="Drink"
-          multiple
-        />
-        <div class="card-body bg-base-100 w-[400px] h-[400px]">
+        <img class="w-[400px] h-[300px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
+        <div class="card-body bg-base-100 w-[400px]">
           <h2 class="card-title mb-3">{{ item.category }}</h2>
           <p class="text-sm">음료명: {{ item.name }}</p>
           <p class="text-sm">매장명: {{ item.store }}</p>
@@ -18,9 +14,10 @@
           </p>
         </div>
       </div>
+
       <!-- The previous button -->
       <button
-        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-amber-500 cursor-pointer"
+        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
         @click="moveSlide(-1)"
       >
         <svg
@@ -37,7 +34,7 @@
 
       <!-- The next button -->
       <button
-        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-amber-500 cursor-pointer"
+        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
         @click="moveSlide(1)"
       >
         <svg
@@ -57,9 +54,12 @@
 
 <script>
 import Modal from '../modal/Modal.vue'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   components: {
     'modal-component': Modal
+    // VueSlickCarousel
   },
   data() {
     return {
@@ -67,9 +67,23 @@ export default {
       slideIndex: 1
     }
   },
-  async created() {
-    await this.$axios
-      .get(`/serverApi/drinks/Coffee`)
+  computed: {
+    ...mapGetters('Drink', { drink: 'Drink', DrinkList: 'DrinkList' }),
+    // infoData() {
+    //   return this.drink
+    // },
+    drinkList() {
+      return this.drink
+    }
+    // set the default active slide to the first one
+    // showSlide(slideIndex) {
+    //   console.log(slideIndex)
+    //   return this.showSlides()
+    // }
+  },
+  created() {
+    this.$axios
+      .get(`/serverApi/drinks/Non-Coffee`)
       .then(res => {
         this.list = res.data.rows
         console.log(res.data.rows)
@@ -77,10 +91,19 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      }),
-      this.showSlide(1)
+      })
   },
+  mounted() {
+    this.showSlide(this.slideIndex)
+  },
+
   methods: {
+    ...mapActions('Drink', ['actDrinkInit', 'actDrinkList', 'actDrinkInfo']),
+    getDrinks(val) {
+      console.log('val : ', val)
+      this.actDrinkList(val)
+    },
+
     // change slide with the prev/next button
     moveSlide(moveStep) {
       this.showSlide((this.slideIndex += moveStep))
@@ -89,7 +112,7 @@ export default {
     currentSlide(n) {
       this.showSlide((this.slideIndex = n))
     },
-    showSlide(n) {
+    showSlides(n) {
       let i
       const slides = this.$refs.slide
 

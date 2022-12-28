@@ -1,47 +1,107 @@
 <template>
-  <div class="w-6/12">
+  <div class="w-[700px]">
     <modal-component class="grid justify-items-end" />
-    <div class="flex items-center justify-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-      </svg>
-
-      <div ref="slider" class="card lg:card-side bg-base-100 shadow-xl w-[900px]">
-        <figure><img src="https://placeimg.com/400/400/arch" alt="Album" /></figure>
-        <div class="card-body">
-          <h2 class="card-title mb-3">카테고리</h2>
-          <p class="text-sm">음료명:</p>
-          <p class="text-sm">매장명:</p>
-          <p class="text-sm">키워드: <kbd class="kbd">#</kbd></p>
+    <div class="relative mx-auto flex flex-row justify-items-center">
+      <div v-for="item in list" :key="item.id" ref="slide" :index="'slideIndex=1'" class="slide relative flex flex-row">
+        <img class="w-[400px] h-[400px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
+        <div class="card-body bg-base-100 w-[400px] h-[400px]">
+          <h2 class="card-title mb-3">{{ item.category }}</h2>
+          <p class="text-sm">음료명: {{ item.name }}</p>
+          <p class="text-sm">매장명: {{ item.store }}</p>
+          <p class="text-sm">
+            키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+          </p>
         </div>
       </div>
 
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
+      <!-- The previous button -->
+      <button
+        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-amber-500 cursor-pointer"
+        @click="moveSlide(-1)"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
+      <!-- The next button -->
+      <button
+        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-violet-500 cursor-pointer"
+        @click="moveSlide(1)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import Modal from '../modal/Modal.vue'
+
 export default {
   components: {
     'modal-component': Modal
+  },
+  data() {
+    return {
+      list: [],
+      slideIndex: 1
+    }
+  },
+  async created() {
+    await this.$axios
+      .get(`/serverApi/drinks/Tea`)
+      .then(res => {
+        this.list = res.data.rows
+        console.log('success', res)
+      })
+      .catch(error => {
+        console.log(error)
+      }),
+      this.showSlide(1)
+  },
+  methods: {
+    // change slide with the prev/next button
+    moveSlide(moveStep) {
+      this.showSlide((this.slideIndex += moveStep))
+    },
+    // change slide with the dots
+    currentSlide(n) {
+      this.showSlide((this.slideIndex = n))
+    },
+    showSlide(n) {
+      let i
+      const slides = this.$refs.slide
+
+      if (n > slides.length) {
+        this.slideIndex = 1
+      }
+      if (n < 1) {
+        this.slideIndex = slides.length
+      }
+      // hide all slides
+      for (i = 0; i < slides.length; i++) {
+        slides[i].classList.add('hidden')
+      }
+      // show the active slide
+      slides[this.slideIndex - 1].classList.remove('hidden')
+    }
   }
 }
 </script>

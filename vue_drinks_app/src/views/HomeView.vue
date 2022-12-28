@@ -20,6 +20,7 @@ import Header from '../components/layout/Header'
 import CoffeeSection from '../components/sliders/CoffeeSection'
 import NoncoffeeSection from '../components/sliders/NoncoffeeSection'
 import TeaSection from '../components/sliders/TeaSection'
+// import Ex from '../components/sliders/ex'
 
 export default {
   components: {
@@ -27,6 +28,7 @@ export default {
     'coffee-section': CoffeeSection,
     'noncoffee-section': NoncoffeeSection,
     'tea-section': TeaSection
+    // 'ex-view': Ex
   }
 }
 </script>

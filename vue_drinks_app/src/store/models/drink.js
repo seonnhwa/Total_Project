@@ -100,22 +100,22 @@ export default {
     //       context.commit('setUpdatedResult', -1)
     //     })
     // },
-    actImgUpdate(context, payload) {
-      context.commit('setInsertedResult', null)
-      const formData = new FormData()
-      formData.append('img', payload.img)
-      api
-        .post(`/serverApi/drinks/uploads`, formData)
-        .then(response => {
-          const insertedResult = response && response.data && response.data.id
-          context.commit('setInsertedResult', insertedResult)
-        })
-        .catch(error => {
-          // 에러인 경우 처리
-          console.error('DrinkInsert.error', error)
-          context.commit('setInsertedResult', -1)
-        })
-    },
+    // actImgUpdate(context, payload) {
+    //   context.commit('setInsertedResult', null)
+    //   const formData = new FormData()
+    //   formData.append('img', payload.img)
+    //   api
+    //     .post(`/serverApi/drinks/uploads`, formData)
+    //     .then(response => {
+    //       const insertedResult = response && response.data && response.data.id
+    //       context.commit('setInsertedResult', insertedResult)
+    //     })
+    //     .catch(error => {
+    //       // 에러인 경우 처리
+    //       console.error('DrinkInsert.error', error)
+    //       context.commit('setInsertedResult', -1)
+    //     })
+    // },
     // 초기화
     actDrinkInit(context, payload) {
       context.commit('setDrink', { ...stateInit.Drink })
@@ -128,7 +128,7 @@ export default {
 
       /* RestAPI 호출 */
       api
-        .get(`/serverApi/drinks/${payload}`)
+        .get(`/serverApi/drinks`)
         .then(response => {
           console.log('response : ', response)
           const drink = response && response.data
