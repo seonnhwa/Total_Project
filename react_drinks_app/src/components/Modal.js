@@ -4,7 +4,10 @@ const Modal = () => {
   return (
     <div className="w-6/12 mx-auto grid justify-items-end mt-16 mb-4">
       {/* The button to open modal */}
-      <label htmlFor="my-modal-6" className="btn">
+      <label
+        htmlFor="my-modal-6"
+        className="btn text-slate-800 bg-transparent border-0 hover:text-slate-50"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
