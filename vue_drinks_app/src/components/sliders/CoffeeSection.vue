@@ -1,80 +1,74 @@
 <template>
-  <div class="w-full">
-    <modal-component class="grid justify-items-center" />
-    <div class="flex items-center justify-center overflow-x-scroll scrollbar-hide">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-        @click="slideLeft"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-      </svg>
-      <div v-for="item in list" :key="item.id" class="card card-side bg-base-100 shadow-xl mr-8 w-[900px]">
-        <div class="coffeeSection">
-          <figure>
-            <img
-              class="img-fluid w-[300px] h-[300px]"
-              :src="`http://192.168.0.62:3001/uploads/${item.img}`"
-              alt="drinkImg"
-            />
-          </figure>
-          <div class="card-body">
-            <h2 class="card-title mb-3">{{ item.category }}</h2>
-            <p class="text-sm">음료명: {{ item.name }}</p>
-            <p class="text-sm">매장명: {{ item.store }}</p>
-            <p class="text-sm">
-              키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
-            </p>
-          </div>
+  <div class="w-[700px]">
+    <modal-component class="grid justify-items-end" />
+    <div class="relative mx-auto flex flex-row">
+      <div v-for="item in list" :key="item.id" ref="slide" :index="'slideIndex=1'" class="slide relative flex flex-row">
+        <img
+          class="w-[400px] h-[300px] bg-base-100"
+          :src="`http://192.168.0.62:3001/uploads/${item.img}`"
+          alt="Drink"
+          multiple
+        />
+        <div class="card-body bg-base-100 w-[400px]">
+          <h2 class="card-title mb-3">{{ item.category }}</h2>
+          <p class="text-sm">음료명: {{ item.name }}</p>
+          <p class="text-sm">매장명: {{ item.store }}</p>
+          <p class="text-sm">
+            키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+          </p>
         </div>
       </div>
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-10 h-10 cursor-pointer opacity-50 hover:opacity-100"
-        @click="slideRight"
+      <!-- The previous button -->
+      <button
+        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        @click="moveSlide(-1)"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
+      <!-- The next button -->
+      <button
+        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        @click="moveSlide(1)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import Modal from '../modal/Modal.vue'
-import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     'modal-component': Modal
   },
   data() {
     return {
-      list: []
+      list: [],
+      slideIndex: 1
     }
   },
-  computed: {
-    DrinkInsertedResult: state => state.InsertedResult,
-    ...mapGetters('Drink', { drink: 'Drink', drinkList: 'DrinkList', drinkResult: 'DrinkInsertedResult' }),
-    DrinkList() {
-      return this.drink
-    },
-    insertedResult() {
-      return this.drinkResult
-    },
-    getImg() {
-      return `${process.env.VUE_APP_SERVER}/uploads/${this.drink.img}`
-    }
-  },
-  created() {
-    this.$axios
+  async created() {
+    await this.$axios
       .get(`/serverApi/drinks/Coffee`)
       .then(res => {
         this.list = res.data.rows
@@ -83,15 +77,34 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      })
+      }),
+      this.showSlide(1)
   },
   methods: {
-    ...mapActions('Drink', ['actDrinkList']),
-    slideLeft() {
-      this.$refs.cardSlide.scrollLeft = this.$refs.cardSlide.scrollLeft - 900
+    // change slide with the prev/next button
+    moveSlide(moveStep) {
+      this.showSlide((this.slideIndex += moveStep))
     },
-    slideRight() {
-      this.$refs.cardSlide.scrollLeft = this.$refs.cardSlide.scrollLeft + 900
+    // change slide with the dots
+    currentSlide(n) {
+      this.showSlide((this.slideIndex = n))
+    },
+    showSlide(n) {
+      let i
+      const slides = this.$refs.slide
+
+      if (n > slides.length) {
+        this.slideIndex = 1
+      }
+      if (n < 1) {
+        this.slideIndex = slides.length
+      }
+      // hide all slides
+      for (i = 0; i < slides.length; i++) {
+        slides[i].classList.add('hidden')
+      }
+      // show the active slide
+      slides[this.slideIndex - 1].classList.remove('hidden')
     }
   }
 }

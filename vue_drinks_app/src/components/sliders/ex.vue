@@ -1,66 +1,136 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
--->
 <template>
-  <div class="bg-gray-100">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-        <h2 class="text-2xl font-bold text-gray-900">Collections</h2>
-
-        <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
-          <div v-for="callout in callouts" :key="callout.name" class="group relative">
-            <div
-              class="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1"
-            >
-              <img :src="callout.imageSrc" :alt="callout.imageAlt" class="h-full w-full object-cover object-center" />
-            </div>
-            <h3 class="mt-6 text-sm text-gray-500">
-              <a :href="callout.href">
-                <span class="absolute inset-0" />
-                {{ callout.name }}
-              </a>
-            </h3>
-            <p class="text-base font-semibold text-gray-900">{{ callout.description }}</p>
-          </div>
+  <div class="w-full">
+    <modal-component class="grid justify-items-center" />
+    <!-- Implement the carousel -->
+    <div class="relative mx-auto flex flex-row">
+      <div v-for="item in list" :key="item.id" ref="slide" :index="'slideIndex=1'" class="slide relative flex flex-row">
+        <img class="w-[400px] h-[300px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
+        <div class="card-body bg-base-100 w-[400px]">
+          <h2 class="card-title mb-3">{{ item.category }}</h2>
+          <p class="text-sm">음료명: {{ item.name }}</p>
+          <p class="text-sm">매장명: {{ item.store }}</p>
+          <p class="text-sm">
+            키워드: <kbd class="kbd">#{{ item.keyword }}</kbd>
+          </p>
         </div>
       </div>
+
+      <!-- The previous button -->
+      <button
+        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        @click="moveSlide(-1)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
+      <!-- The next button -->
+      <button
+        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        @click="moveSlide(1)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
 
-<script setup>
-const callouts = [
-  {
-    name: 'Desk and Office',
-    description: 'Work from home accessories',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-01.jpg',
-    imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
-    href: '#'
+<script>
+import Modal from '../modal/Modal.vue'
+import { mapActions, mapGetters } from 'vuex'
+
+export default {
+  components: {
+    'modal-component': Modal
+    // VueSlickCarousel
   },
-  {
-    name: 'Self-Improvement',
-    description: 'Journals and note-taking',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-02.jpg',
-    imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
-    href: '#'
+  data() {
+    return {
+      list: [],
+      slideIndex: 1
+    }
   },
-  {
-    name: 'Travel',
-    description: 'Daily commute essentials',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
-    href: '#'
+  computed: {
+    ...mapGetters('Drink', { drink: 'Drink', DrinkList: 'DrinkList' }),
+    // infoData() {
+    //   return this.drink
+    // },
+    drinkList() {
+      return this.drink
+    }
+    // set the default active slide to the first one
+    // showSlide(slideIndex) {
+    //   console.log(slideIndex)
+    //   return this.showSlides()
+    // }
+  },
+  created() {
+    this.$axios
+      .get(`/serverApi/drinks/Non-Coffee`)
+      .then(res => {
+        this.list = res.data.rows
+        console.log(res.data.rows)
+        console.log('success', res)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
+  mounted() {
+    this.showSlide(this.slideIndex)
+  },
+
+  methods: {
+    ...mapActions('Drink', ['actDrinkInit', 'actDrinkList', 'actDrinkInfo']),
+    getDrinks(val) {
+      console.log('val : ', val)
+      this.actDrinkList(val)
+    },
+
+    // change slide with the prev/next button
+    moveSlide(moveStep) {
+      this.showSlide((this.slideIndex += moveStep))
+    },
+    // change slide with the dots
+    currentSlide(n) {
+      this.showSlide((this.slideIndex = n))
+    },
+    showSlides(n) {
+      let i
+      const slides = this.$refs.slide
+
+      if (n > slides.length) {
+        this.slideIndex = 1
+      }
+      if (n < 1) {
+        this.slideIndex = slides.length
+      }
+      // hide all slides
+      for (i = 0; i < slides.length; i++) {
+        slides[i].classList.add('hidden')
+      }
+      // show the active slide
+      slides[this.slideIndex - 1].classList.remove('hidden')
+    }
   }
-]
+}
 </script>
+
+<style></style>
