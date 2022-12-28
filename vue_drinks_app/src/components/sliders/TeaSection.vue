@@ -3,8 +3,8 @@
     <modal-component class="grid justify-items-end" />
     <div class="relative mx-auto flex flex-row justify-items-center">
       <div v-for="item in list" :key="item.id" ref="slide" :index="'slideIndex=1'" class="slide relative flex flex-row">
-        <img class="w-[400px] h-[300px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
-        <div class="card-body bg-base-100 w-[400px]">
+        <img class="w-[400px] h-[400px]" :src="`http://192.168.0.62:3001/uploads/${item.img}`" alt="Drink" multiple />
+        <div class="card-body bg-base-100 w-[400px] h-[400px]">
           <h2 class="card-title mb-3">{{ item.category }}</h2>
           <p class="text-sm">음료명: {{ item.name }}</p>
           <p class="text-sm">매장명: {{ item.store }}</p>
