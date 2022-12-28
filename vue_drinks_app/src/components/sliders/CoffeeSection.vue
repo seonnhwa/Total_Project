@@ -20,7 +20,7 @@
       </div>
       <!-- The previous button -->
       <button
-        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        class="absolute left-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-amber-500 cursor-pointer"
         @click="moveSlide(-1)"
       >
         <svg
@@ -37,7 +37,7 @@
 
       <!-- The next button -->
       <button
-        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer"
+        class="absolute right-0 top-1/2 p-4 -translate-y-1/2 text-black hover:text-amber-500 cursor-pointer"
         @click="moveSlide(1)"
       >
         <svg

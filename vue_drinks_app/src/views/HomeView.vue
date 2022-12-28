@@ -4,7 +4,6 @@
       <app-header v-if="$route.meta.header !== false" class="fixed" />
       <div class="snap-start bg-amber-50 h-screen flex justify-center text-8xl">
         <coffee-section class="mt-32" />
-        <!-- <ex-view class="mt-32" /> -->
       </div>
       <div class="snap-start bg-sky-100 h-screen flex items-center justify-center text-8xl">
         <noncoffee-section />
